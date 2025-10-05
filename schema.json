@@ -1,0 +1,83 @@
+{
+  "name": "barbarika-robotics-50h",
+  "version": "1.0.0",
+  "description": "50 hours of teleoperation data in LeRobot-style layout: Parquet episodes + per-camera MP4s, with meta/ JSONLs.",
+  "format": "lerobot-parquet+mp4",
+  "license": "CC-BY-4.0",
+  "layout": {
+    "root": "<dataset_name>/",
+    "paths": {
+      "data_chunks": "data/chunk-*/episode_*.parquet",
+      "video_main": "videos/chunk-*/observation.images.main/episode_*.mp4",
+      "video_secondary": "videos/chunk-*/observation.images.secondary_*/episode_*.mp4",
+      "meta_info": "meta/info.json",
+      "meta_readme": "meta/README.md",
+      "episodes": "meta/episodes.jsonl",
+      "tasks": "meta/tasks.jsonl",
+      "stats": "meta/episodes_stats.jsonl"
+    },
+    "episode_id_pattern": "episode_(?<id>\\d{6})"
+  },
+  "episode": {
+    "id_key": "episode_id",
+    "index_origin": 0,
+    "required_artifacts": ["parquet", "at_least_one_video"]
+  },
+  "cameras": [
+    { "key": "observation.images.main", "role": "primary", "extension": ".mp4" },
+    { "key": "observation.images.secondary_0", "role": "secondary", "extension": ".mp4", "optional": true },
+    { "key": "observation.images.secondary_1", "role": "secondary", "extension": ".mp4", "optional": true }
+  ],
+  "parquet_schema": {
+    "required_columns": [
+      "timestamp",
+      "obs.rgb_main_path",
+      "action",
+      "state.ee_pose",
+      "state.joint_pos",
+      "meta.operator"
+    ],
+    "column_types": {
+      "timestamp": "int64|float64",
+      "obs.rgb_main_path": "string",
+      "action": "array<float>|struct",
+      "state.ee_pose": "array<float>[7]|struct",
+      "state.joint_pos": "array<float>|struct",
+      "meta.operator": "string"
+    }
+  },
+  "meta_files": {
+    "info.json": {
+      "required_keys": ["dataset_name", "version", "cameras", "fps", "action_space", "robot", "license"]
+    },
+    "episodes.jsonl": {
+      "line_schema": {
+        "episode_id": "string",
+        "chunk": "string",
+        "duration_s": "number",
+        "n_steps": "integer",
+        "parquet_path": "string",
+        "videos": "object",
+        "task_id": "string",
+        "date": "string",
+        "operator": "string"
+      }
+    },
+    "tasks.jsonl": {
+      "line_schema": {
+        "task_id": "string",
+        "name": "string",
+        "description": "string",
+        "split": "string"
+      }
+    },
+    "episodes_stats.jsonl": {
+      "optional": true,
+      "notes": "Aggregate stats per episode for v2.1; use stats.json for v2.0 if you prefer."
+    }
+  },
+  "integrity": {
+    "video_fps_expected": 30,
+    "sync_hint": "Ensure timestamps align between Parquet rows and video frames."
+  }
+}

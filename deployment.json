@@ -1,0 +1,43 @@
+{
+  "dlpName": "BrbkDataDAO",
+  "tokenName": "BRBK",
+  "tokenSymbol": "BRBK",
+  "privateKey": "0x6c2fdfe41bbb6a48d971f7ffdd0e04614331e85e60bec3288f0051895f6b2161",
+  "address": "0x8d4697959D7A782238c3f471b6E5D5C8B0232016",
+  "publicKey": "0x049c65667d99ac9dd343bec4af71ec075c0a33e2628358e9727c0df5658001d1dce8abd6b35707b6637ba9da70b71bad1cc16d83b9ca9fe7b78ffaef112f22005b",
+  "githubUsername": "metaseeker1",
+  "pinataApiKey": "59e4bb9d358d6d0bd983",
+  "pinataApiSecret": "8cae7bdb7b80507d3ede621f0d4606e0b617191573f3ef2f30c7964a31c5ca73",
+  "googleClientId": "http://458206832883-0vtogb45tr0fqg6gafponmkrldgq4q25.apps.googleusercontent.com/",
+  "googleClientSecret": "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",
+  "proofRepo": "https://github.com/metaseeker1/brbkdatadao-proof",
+  "refinerRepo": "https://github.com/metaseeker1/brbkdatadao-refiner",
+  "network": "moksha",
+  "rpcUrl": "https://rpc.moksha.vana.org",
+  "chainId": 14800,
+  "state": {
+    "contractsDeployed": true,
+    "dataDAORegistered": true,
+    "proofConfigured": true,
+    "proofPublished": false,
+    "refinerConfigured": true,
+    "refinerPublished": true,
+    "uiConfigured": true,
+    "proofGitSetup": true,
+    "refinerGitSetup": true
+  },
+  "contracts": {
+    "tokenAddress": "0x2392d44cd91Df33ADC4C41ef6A2e710BB9e29277",
+    "proxyAddress": "0x8f646eBC1f109648e8d25AD3D5574ccBeC907e82",
+    "vestingAddress": "0xe134BC86C3B7E82c1F2faAfaE3dE645611953052"
+  },
+  "tokenAddress": "0x2392d44cd91Df33ADC4C41ef6A2e710BB9e29277",
+  "proxyAddress": "0x8f646eBC1f109648e8d25AD3D5574ccBeC907e82",
+  "vestingAddress": "0xe134BC86C3B7E82c1F2faAfaE3dE645611953052",
+  "errors": {},
+  "dlpId": 171,
+  "proofUrl": "https://github.com/metaseeker1/brbkdatadao-proof/releases/download/v1/my-proof-1.tar.gz",
+  "schemaUrl": "./schema.json",
+  "refinerUrl": "https://github.com/metaseeker1/brbkdatadao-refiner/releases/download/v2/refiner-2.tar.gz",
+  "refinerId": 191
+}
