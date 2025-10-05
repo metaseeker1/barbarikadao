@@ -1,4 +1,5 @@
-.env
-.env.local
-*.pem
+.env*
 *.key
+*.pem
+node_modules/
+.next/
