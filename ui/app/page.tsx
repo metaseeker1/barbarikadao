@@ -218,12 +218,12 @@ export default function Home() {
                 <div className="mb-10 md:mb-12 w-full max-w-6xl">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
                     {[
-                      "robot41.mp4",
+                      "robot42.mp4",
                       "robo_1.mp4",
                       "eg0_3.mp4",
                       "ego_2.mp4",
                       "robot3.mp4",
-                      "robot42.mp4",
+                      "robot41.mp4",
                     ].map((file, i) => (
                       <div
                         key={i}
