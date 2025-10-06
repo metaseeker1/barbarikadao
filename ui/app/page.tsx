@@ -111,9 +111,54 @@ export default function Home() {
           {activePage === 'home' && (
             <>
               <div className="flex flex-col items-center justify-center text-center min-h-[600px]">
-                <div className="mb-8">
-                  <img src="https://raw.githubusercontent.com/metaseeker1/barbarika_site/refs/heads/main/hjg.png" alt="BARBARIKA" className="max-w-xs w-full" />
+                {/* Video Grid */}
+                <div className="mb-8 w-full max-w-5xl">
+                  <div className="grid grid-cols-3 gap-4 mb-8">
+                    {/* Top row - 3 small videos */}
+                    <div className="aspect-video bg-[#1a1a1a] rounded-lg overflow-hidden border border-[#333]">
+                      <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+                        <source src="https://www.mecka.ai/videos/hero-1.mp4" type="video/mp4" />
+                      </video>
+                    </div>
+                    <div className="aspect-video bg-[#1a1a1a] rounded-lg overflow-hidden border border-[#333]">
+                      <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+                        <source src="https://www.mecka.ai/videos/hero-2.mp4" type="video/mp4" />
+                      </video>
+                    </div>
+                    <div className="aspect-video bg-[#1a1a1a] rounded-lg overflow-hidden border border-[#333]">
+                      <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+                        <source src="https://www.mecka.ai/videos/hero-3.mp4" type="video/mp4" />
+                      </video>
+                    </div>
+                  </div>
+                  
+                  {/* Middle row - 1 large video */}
+                  <div className="aspect-video bg-[#1a1a1a] rounded-lg overflow-hidden border-2 border-[#a4f431] mb-8">
+                    <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+                      <source src="https://www.mecka.ai/videos/hero-main.mp4" type="video/mp4" />
+                    </video>
+                  </div>
+                  
+                  {/* Bottom row - 3 small videos */}
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="aspect-video bg-[#1a1a1a] rounded-lg overflow-hidden border border-[#333]">
+                      <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+                        <source src="https://www.mecka.ai/videos/hero-4.mp4" type="video/mp4" />
+                      </video>
+                    </div>
+                    <div className="aspect-video bg-[#1a1a1a] rounded-lg overflow-hidden border border-[#333]">
+                      <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+                        <source src="https://www.mecka.ai/videos/hero-5.mp4" type="video/mp4" />
+                      </video>
+                    </div>
+                    <div className="aspect-video bg-[#1a1a1a] rounded-lg overflow-hidden border border-[#333]">
+                      <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+                        <source src="https://www.mecka.ai/videos/hero-6.mp4" type="video/mp4" />
+                      </video>
+                    </div>
+                  </div>
                 </div>
+                
                 <h1 className="text-5xl font-black tracking-wider mb-5 uppercase" style={{fontFamily: 'Impact, Arial Black, sans-serif'}}>OPEN DATA FACTORY FOR ROBOTICS</h1>
                 <p className="text-base text-gray-400 tracking-widest mb-12">Lets Solve Data Scarcity in Robotics Together</p>
                 <p className="text-2xl font-bold tracking-widest mb-10">CONNECT - TELEOPERATE - CONTRIBUTE - TRAIN</p>
