@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { UserProfile } from "./profile/UserProfile";
+// NOTE: Removed import for './profile/UserProfile' because the file does not exist.
+// If you add it later, create app/profile/UserProfile.tsx (or components/profile/UserProfile.tsx)
+// and restore the import.
+// import { UserProfile } from "./profile/UserProfile";
 
 type PageId =
   | "home"
@@ -23,12 +26,16 @@ export default function Home() {
   const isLoading = status === "loading";
   const [activePage, setActivePage] = useState<PageId>("home");
   const [showModal, setShowModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
 
   const handleGoogleSignIn = () => signIn("google");
   const handleSignOut = () => signOut({ callbackUrl: "/" });
+
+  const openSidebar = () => setSidebarOpen(true);
+  const closeSidebar = () => setSidebarOpen(false);
 
   const NavItem = ({
     id,
@@ -47,7 +54,10 @@ export default function Home() {
           ? "bg-[#a4f431] text-black font-bold"
           : "text-gray-400 hover:bg-[#a4f431]/10 hover:text-[#a4f431]"
       }`}
-      onClick={() => setActivePage(id)}
+      onClick={() => {
+        setActivePage(id);
+        setSidebarOpen(false); // auto-close drawer on mobile
+      }}
     >
       <span className="text-base leading-none">{icon}</span>
       <span className="uppercase">{label}</span>
@@ -68,9 +78,25 @@ export default function Home() {
       title="Follow on X"
     >
       <svg viewBox="0 0 24 24" className="w-5 h-5 fill-black" aria-hidden>
-        <path d="M18.244 2H21l-6.5 7.43L22.5 22H16l-5-6-5.5 6H3l7.1-7.77L1.5 2h6.6l4.4 5.5L18.244 2zM16 20l-9.5-12L4 4h2.5l9.5 12L20 20h-4z"/>
+        <path d="M18.244 2H21l-6.5 7.43L22.5 22H16l-5-6-5.5 6H3l7.1-7.77L1.5 2h6.6l4.4 5.5L18.244 2zM16 20l-9.5-12L4 4h2.5l9.5 12L20 20h-4z" />
       </svg>
     </a>
+  );
+
+  const Hamburger = ({ className = "" }: { className?: string }) => (
+    <button
+      type="button"
+      aria-label="Open menu"
+      onClick={openSidebar}
+      className={`md:hidden inline-flex items-center justify-center w-9 h-9 rounded hover:bg-black/10 ${className}`}
+    >
+      <svg viewBox="0 0 24 24" className="w-6 h-6" aria-hidden>
+        <path
+          d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"
+          fill="currentColor"
+        />
+      </svg>
+    </button>
   );
 
   if (isLoading) {
@@ -92,7 +118,7 @@ export default function Home() {
         <header className="relative z-10 bg-white py-4 px-4 sm:px-6 md:px-8 grid grid-cols-3 items-center">
           <div className="flex items-center gap-3">
             <img
-              src="https://raw.githubusercontent.com/metaseeker1/barbarika_site/refs/heads/main/hjg.png"
+              src="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/hjg.png"
               alt="BARBARIKA"
               className="h-10 sm:h-12"
             />
@@ -107,20 +133,147 @@ export default function Home() {
           </div>
           <div className="justify-self-end flex items-center gap-2">
             <TwitterIcon />
+            <Hamburger />
             <button
               onClick={handleSignOut}
-              className="px-3 sm:px-4 py-2 bg-black text-[#a4f431] hover:bg-gray-800 transition-colors font-semibold text-xs sm:text-sm"
+              className="hidden md:inline-flex px-3 sm:px-4 py-2 bg-black text-[#a4f431] hover:bg-gray-800 transition-colors font-semibold text-xs sm:text-sm"
             >
               Sign out
             </button>
           </div>
         </header>
 
-        <main className="container mx-auto px-4 py-8 flex-1">
-          <div className="max-w-4xl mx-auto">
-            <UserProfile />
-          </div>
-        </main>
+        {/* Desktop-only sidebar + content shell */}
+        <div className="relative z-[1] flex min-h-[calc(100vh-72px)] md:min-h-[calc(100vh-80px)]">
+          {/* Desktop sidebar (hidden on mobile) */}
+          <nav className="hidden md:flex w-60 flex-shrink-0 bg-black/95 border-r border-white/10 py-5 min-h-[calc(100vh-80px)] flex-col">
+            <div className="mb-8">
+              <div className="px-5 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                NAVIGATION
+              </div>
+              <NavItem id="home" icon="⊞" label="DASHBOARD" />
+            </div>
+
+            <div className="mb-8">
+              <div className="px-5 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                CONTROL & RECORD
+              </div>
+              <NavItem id="calibration" icon="▲" label="CALIBRATION" />
+              <NavItem id="control" icon="⊙" label="CONTROL ROBOT" />
+              <NavItem id="upload" icon="↑" label="UPLOAD DATASET" live />
+              <NavItem id="datasets" icon="☰" label="BROWSE DATASETS" />
+            </div>
+
+            <div className="mb-8">
+              <div className="px-5 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                ANNOTATE & DEBUG
+              </div>
+              <NavItem id="annotate" icon="✎" label="ANNOTATE DATA" />
+              <NavItem id="visualize" icon="☰" label="VISUALIZE DATA" />
+              <NavItem id="replay" icon="⊡" label="REPLAY SESSIONS" />
+            </div>
+
+            <div className="mb-8">
+              <div className="px-5 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                AI & TRAINING
+              </div>
+              <NavItem id="training" icon="◊" label="AI TRAINING" />
+              <NavItem id="aicontrol" icon="◉" label="AI CONTROL" />
+              <NavItem id="skillstore" icon="★" label="SKILL STORE" />
+            </div>
+
+            <div className="mb-0">
+              <div className="px-5 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                SHOP
+              </div>
+              <NavItem id="store" icon="⊠" label="STORE" />
+            </div>
+          </nav>
+
+          {/* MOBILE DRAWER SIDEBAR */}
+          {sidebarOpen && (
+            <div className="md:hidden fixed inset-0 z-[60]">
+              <div
+                className="absolute inset-0 bg-black/60"
+                onClick={closeSidebar}
+                aria-hidden
+              />
+              <aside
+                className="absolute left-0 top-0 bottom-0 w-72 max-w-[85%] bg-black/95 border-r border-white/10 p-5 overflow-y-auto"
+                role="dialog"
+                aria-label="Mobile navigation"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-white/70 text-xs tracking-[0.2em]">
+                    MENU
+                  </span>
+                  <button
+                    aria-label="Close menu"
+                    onClick={closeSidebar}
+                    className="inline-flex items-center justify-center w-8 h-8 rounded hover:bg-white/10"
+                  >
+                    <svg viewBox="0 0 24 24" className="w-5 h-5" aria-hidden>
+                      <path
+                        d="M18.3 5.71 12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.3 19.71 2.89 18.3 9.17 12 2.89 5.71 4.3 4.29l6.29 6.3 6.29-6.3z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="mb-6">
+                  <div className="px-1 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                    NAVIGATION
+                  </div>
+                  <NavItem id="home" icon="⊞" label="DASHBOARD" />
+                </div>
+
+                <div className="mb-6">
+                  <div className="px-1 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                    CONTROL & RECORD
+                  </div>
+                  <NavItem id="calibration" icon="▲" label="CALIBRATION" />
+                  <NavItem id="control" icon="⊙" label="CONTROL ROBOT" />
+                  <NavItem id="upload" icon="↑" label="UPLOAD DATASET" live />
+                  <NavItem id="datasets" icon="☰" label="BROWSE DATASETS" />
+                </div>
+
+                <div className="mb-6">
+                  <div className="px-1 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                    ANNOTATE & DEBUG
+                  </div>
+                  <NavItem id="annotate" icon="✎" label="ANNOTATE DATA" />
+                  <NavItem id="visualize" icon="☰" label="VISUALIZE DATA" />
+                  <NavItem id="replay" icon="⊡" label="REPLAY SESSIONS" />
+                </div>
+
+                <div className="mb-6">
+                  <div className="px-1 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                    AI & TRAINING
+                  </div>
+                  <NavItem id="training" icon="◊" label="AI TRAINING" />
+                  <NavItem id="aicontrol" icon="◉" label="AI CONTROL" />
+                  <NavItem id="skillstore" icon="★" label="SKILL STORE" />
+                </div>
+
+                <div>
+                  <div className="px-1 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                    SHOP
+                  </div>
+                  <NavItem id="store" icon="⊠" label="STORE" />
+                </div>
+              </aside>
+            </div>
+          )}
+
+          {/* main content */}
+          <main className="flex-1 p-10 md:p-16 overflow-y-auto">
+            <div className="max-w-4xl mx-auto">
+              {/* Placeholder profile while missing actual component */}
+              <UserProfile />
+            </div>
+          </main>
+        </div>
 
         <WhiteFooter />
       </div>
@@ -139,11 +292,11 @@ export default function Home() {
         }}
       />
 
-      {/* header — logo left, title centered, twitter right */}
+      {/* header — logo left, title centered, twitter/hamburger right */}
       <header className="relative z-10 bg-white py-4 px-4 sm:px-6 md:px-8 grid grid-cols-3 items-center">
         <div className="flex items-center gap-3">
           <img
-            src="https://raw.githubusercontent.com/metaseeker1/barbarika_site/refs/heads/main/hjg.png"
+            src="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/hjg.png"
             alt="BARBARIKA"
             className="h-10 sm:h-12"
           />
@@ -156,15 +309,16 @@ export default function Home() {
             BARBARIKA
           </h1>
         </div>
-        <div className="justify-self-end">
+        <div className="justify-self-end flex items-center gap-2">
           <TwitterIcon />
+          <Hamburger />
         </div>
       </header>
 
       {/* shell */}
-      <div className="relative z-1 flex min-h-[calc(100vh-72px)] md:min-h-[calc(100vh-80px)]">
-        {/* sidebar */}
-        <nav className="w-60 flex-shrink-0 bg-black/95 border-r border-white/10 py-5 min-h-[calc(100vh-72px)] md:min-h-[calc(100vh-80px)]">
+      <div className="relative z-[1] flex min-h-[calc(100vh-72px)] md:min-h-[calc(100vh-80px)]">
+        {/* Desktop sidebar (hidden on mobile) */}
+        <nav className="hidden md:flex w-60 flex-shrink-0 bg-black/95 border-r border-white/10 py-5 min-h-[calc(100vh-80px)] flex-col">
           <div className="mb-8">
             <div className="px-5 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
               NAVIGATION
@@ -208,17 +362,124 @@ export default function Home() {
           </div>
         </nav>
 
+        {/* MOBILE DRAWER SIDEBAR */}
+        {sidebarOpen && (
+          <div className="md:hidden fixed inset-0 z-[60]">
+            <div
+              className="absolute inset-0 bg-black/60"
+              onClick={closeSidebar}
+              aria-hidden
+            />
+            <aside
+              className="absolute left-0 top-0 bottom-0 w-72 max-w-[85%] bg-black/95 border-r border-white/10 p-5 overflow-y-auto"
+              role="dialog"
+              aria-label="Mobile navigation"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-white/70 text-xs tracking-[0.2em]">
+                  MENU
+                </span>
+                <button
+                  aria-label="Close menu"
+                  onClick={closeSidebar}
+                  className="inline-flex items-center justify-center w-8 h-8 rounded hover:bg-white/10"
+                >
+                  <svg viewBox="0 0 24 24" className="w-5 h-5" aria-hidden>
+                    <path
+                      d="M18.3 5.71 12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.3 19.71 2.89 18.3 9.17 12 2.89 5.71 4.3 4.29l6.29 6.3 6.29-6.3z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="mb-6">
+                <div className="px-1 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                  NAVIGATION
+                </div>
+                <NavItem id="home" icon="⊞" label="DASHBOARD" />
+              </div>
+
+              <div className="mb-6">
+                <div className="px-1 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                  CONTROL & RECORD
+                </div>
+                <NavItem id="calibration" icon="▲" label="CALIBRATION" />
+                <NavItem id="control" icon="⊙" label="CONTROL ROBOT" />
+                <NavItem id="upload" icon="↑" label="UPLOAD DATASET" live />
+                <NavItem id="datasets" icon="☰" label="BROWSE DATASETS" />
+              </div>
+
+              <div className="mb-6">
+                <div className="px-1 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                  ANNOTATE & DEBUG
+                </div>
+                <NavItem id="annotate" icon="✎" label="ANNOTATE DATA" />
+                <NavItem id="visualize" icon="☰" label="VISUALIZE DATA" />
+                <NavItem id="replay" icon="⊡" label="REPLAY SESSIONS" />
+              </div>
+
+              <div className="mb-6">
+                <div className="px-1 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                  AI & TRAINING
+                </div>
+                <NavItem id="training" icon="◊" label="AI TRAINING" />
+                <NavItem id="aicontrol" icon="◉" label="AI CONTROL" />
+                <NavItem id="skillstore" icon="★" label="SKILL STORE" />
+              </div>
+
+              <div>
+                <div className="px-1 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
+                  SHOP
+                </div>
+                <NavItem id="store" icon="⊠" label="STORE" />
+              </div>
+            </aside>
+          </div>
+        )}
+
         {/* main content */}
         <main className="flex-1 p-10 md:p-16 overflow-y-auto">
           {/* HOME */}
           {activePage === "home" && (
             <>
               <div className="flex flex-col items-center justify-center text-center min-h-[520px]">
-                {/* Video grid */}
+                {/* Video grid: horizontal scroll on mobile, grid on md+ */}
                 <div className="mb-10 md:mb-12 w-full max-w-6xl">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+                  {/* mobile: horizontal lookbook strip */}
+                  <div className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2">
                     {[
-                      "robot42.mp4",
+                      "robot41.mp4",
+                      "robo_1.mp4",
+                      "eg0_3.mp4",
+                      "ego_2.mp4",
+                      "robot3.mp4",
+                      "robot41.mp4",
+                    ].map((file, i) => (
+                      <div
+                        key={i}
+                        className="min-w-[78%] sm:min-w-[65%] snap-center aspect-video bg-[#111] rounded-lg overflow-hidden border border-[#2a2a2a] transform transition-all duration-500 hover:scale-[1.015] hover:border-[#a4f431] hover:shadow-lg hover:shadow-[#a4f431]/15"
+                      >
+                        <video
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          className="w-full h-full object-cover"
+                        >
+                          <source
+                            src={`https://cdn.jsdelivr.net/gh/metaseeker1/barbarika_site@main/${file}`}
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* desktop: 3×2 grid */}
+                  <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+                    {[
+                      "robot41.mp4",
                       "robo_1.mp4",
                       "eg0_3.mp4",
                       "ego_2.mp4",
@@ -247,12 +508,12 @@ export default function Home() {
                 </div>
 
                 <h1
-                  className="text-4xl md:text-5xl font-black tracking-wider mb-4 uppercase leading-tight"
+                  className="text-4xl md:text-5xl font-black tracking-tight md:tracking-[-0.01em] mb-4 uppercase leading-tight"
                   style={{ fontFamily: "Impact, Arial Black, sans-serif" }}
                 >
                   OPEN DATA FACTORY FOR ROBOTICS
                 </h1>
-                <p className="text-sm md:text-base text-gray-400 tracking-[0.25em] mb-10">
+                <p className="text-sm md:text-base text-white/80 tracking-[0.25em] mb-10">
                   Let’s solve data scarcity in robotics — together
                 </p>
                 <p className="text-xl md:text-2xl font-bold tracking-[0.2em] mb-8">
@@ -260,7 +521,7 @@ export default function Home() {
                 </p>
                 <button
                   onClick={openModal}
-                  className="bg-[#a4f431] text-black px-10 md:px-16 py-4 md:py-5 text-lg md:text-2xl font-bold tracking-widest uppercase transition-all hover:bg-[#b5ff3d] hover:scale-[1.03]"
+                  className="bg-[#a4f431] text-black px-10 md:px-16 py-4 md:py-5 text-lg md:text-2xl font-bold tracking-widest uppercase transition-all hover:bg-[#b5ff3d] hover:scale-[1.03] active:scale-[0.99]"
                 >
                   JOIN THE COMMUNITY
                 </button>
@@ -272,7 +533,25 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Supported Robots — images (placeholders) */}
+              {/* STREETWEAR MARQUEE */}
+              <div className="relative my-10 border-y border-white/10 bg-black">
+                <div className="whitespace-nowrap overflow-hidden">
+                  <div className="animate-[marquee_28s_linear_infinite] py-3 text-xs tracking-[0.5em] text-white/70">
+                    <span className="mx-8">BRBK</span>
+                    <span className="mx-8">OPEN DATA FACTORY</span>
+                    <span className="mx-8">DATA DROPS</span>
+                    <span className="mx-8">ROBOT SKILLS</span>
+                    <span className="mx-8">DATADAO</span>
+                    <span className="mx-8">BARBARIKA</span>
+                    <span className="mx-8">BRBK</span>
+                    <span className="mx-8">OPEN DATA FACTORY</span>
+                    <span className="mx-8">DATA DROPS</span>
+                    <span className="mx-8">ROBOT SKILLS</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Supported Robots */}
               <div className="mt-16 md:mt-20">
                 <h2 className="text-2xl md:text-3xl tracking-widest mb-8 md:mb-10 text-center text-[#a4f431]">
                   SUPPORTED ROBOTS
@@ -282,35 +561,36 @@ export default function Home() {
                   <RobotCard
                     name="SO-ARM100"
                     desc="Low-cost 6-DOF robotic arm. Fully supported."
-                    imgSrc="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/SO100_Arm.png"
+                    imgSrc="/robots/so-arm100.png"
                   />
                   <RobotCard
                     name="K-SCALE"
                     desc="Humanoid platform. Integration in progress."
-                    imgSrc="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/Gk8VvmTWUAADKR6.jpeg"
+                    imgSrc="/robots/k-scale.png"
                     soon
                   />
                   <RobotCard
                     name="ARX5"
                     desc="Precision arm. Driver development underway."
-                    imgSrc="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/1732758601106070.png"
+                    imgSrc="/robots/arx5.png"
                     soon
                   />
                   <RobotCard
                     name="TORSSEN"
                     desc="Collaborative robot. SDK integration planned."
-                    imgSrc="https://raw.githubusercontent.com/metaseeker1/barbarika_site/refs/heads/main/Stationary%20Transparent%201.avif"
+                    imgSrc="/robots/torssen.png"
                     soon
                   />
                   <RobotCard
                     name="UNITREE HUMANOID"
                     desc="Humanoid platform. Integration planned."
-                    imgSrc="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/unitree.jpg"
+                    imgSrc="/robots/unitree.png"
+                    soon
                   />
                   <RobotCard
                     name="OPEN ARMS"
                     desc="Open-source manipulators. Support coming soon."
-                    imgSrc="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/1753512622539.jpeg"
+                    imgSrc="/robots/open-arms.png"
                     soon
                   />
                 </div>
@@ -328,7 +608,7 @@ export default function Home() {
                 Premium robotics hardware and gear for researchers and builders
               </p>
 
-              {/* Drops Banner (NEW badge removed) */}
+              {/* Drops Banner */}
               <div className="relative bg-gradient-to-br from-[#a4f431] to-[#8BE948] p-8 md:p-10 mb-14 md:mb-16 text-center overflow-hidden rounded">
                 <h3
                   className="text-2xl md:text-3xl tracking-widest text-black mb-3 md:mb-4 font-black leading-none"
@@ -347,7 +627,7 @@ export default function Home() {
                 </button>
               </div>
 
-              {/* Products Grid — image placeholders, no dates */}
+              {/* Products Grid */}
               <h3 className="text-base md:text-xl tracking-widest mb-5 md:mb-6">
                 ROBOTS & HARDWARE
               </h3>
@@ -649,6 +929,44 @@ export default function Home() {
       )}
 
       <WhiteFooter />
+
+      {/* marquee keyframes */}
+      <style jsx global>{`
+        @keyframes marquee {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/**
+ * Fallback UserProfile component
+ * Replace this with your real component once you add profile/UserProfile.tsx
+ */
+function UserProfile() {
+  return (
+    <div className="border border-white/10 bg-[#0f0f0f] p-6 rounded">
+      <h2 className="text-xl font-bold tracking-wider mb-2">User Profile</h2>
+      <p className="text-sm text-white/70">
+        Placeholder component: <code>./profile/UserProfile</code> not found.
+      </p>
+      <ul className="list-disc list-inside text-xs text-white/60 mt-3">
+        <li>
+          Create <code>app/profile/UserProfile.tsx</code> (or{" "}
+          <code>components/profile/UserProfile.tsx</code>).
+        </li>
+        <li>
+          Export it as <code>export function UserProfile() {"{"} ... {"}"}</code>{" "}
+          or <code>export default</code>.
+        </li>
+        <li>Restore the import at the top of this file.</li>
+      </ul>
     </div>
   );
 }
@@ -656,34 +974,36 @@ export default function Home() {
 /** White Footer (not on grid; white background) */
 function WhiteFooter() {
   return (
-    <footer className="bg-white text-black py-6">
-      <div className="container mx-auto px-4 flex flex-col items-center gap-2 text-center">
-        <div className="flex items-center gap-3">
-          <a
-            href="https://x.com/barbarikaAI"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center w-8 h-8 rounded hover:bg-black/5"
-            title="Follow on X"
-          >
-            <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current" aria-hidden>
-              <path d="M18.244 2H21l-6.5 7.43L22.5 22H16l-5-6-5.5 6H3l7.1-7.77L1.5 2h6.6l4.4 5.5L18.244 2zM16 20l-9.5-12L4 4h2.5l9.5 12L20 20h-4z"/>
-            </svg>
-          </a>
-          <span className="text-black/50">/</span>
-          <span>
-            contact:{" "}
+    <footer className="bg-white text-black">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <div className="flex items-center gap-3">
             <a
-              href="mailto:praveen@barbarika.foundation"
-              className="underline underline-offset-4 hover:text-[#5a7a22]"
+              href="https://x.com/barbarikaAI"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center w-8 h-8 rounded hover:bg-black/5"
+              title="Follow on X"
             >
-              praveen@barbarika.foundation
+              <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden>
+                <path d="M18.244 2H21l-6.5 7.43L22.5 22H16l-5-6-5.5 6H3l7.1-7.77L1.5 2h6.6l4.4 5.5L18.244 2zM16 20l-9.5-12L4 4h2.5l9.5 12L20 20h-4z" />
+              </svg>
             </a>
-          </span>
+            <span className="text-black/50">/</span>
+            <span>
+              contact:{" "}
+              <a
+                href="mailto:praveen@barbarika.foundation"
+                className="underline underline-offset-4 hover:text-[#5a7a22]"
+              >
+                praveen@barbarika.foundation
+              </a>
+            </span>
+          </div>
+          <p className="tracking-wide text-black/70">
+            BARBARIKA DataDAO — Open Data Factory for Robotics
+          </p>
         </div>
-        <p className="tracking-wide text-black/70">
-          BARBARIKA DataDAO — Open Data Factory for Robotics
-        </p>
       </div>
     </footer>
   );
