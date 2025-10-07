@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import type { ReactElement } from "react";
 // If/when you add a real component, restore this import:
 // import { UserProfile } from "./profile/UserProfile";
 
@@ -26,7 +27,7 @@ type NavItemProps = {
   label: string;
   live?: boolean;
 };
-type NavItemComponent = (props: NavItemProps) => JSX.Element;
+type NavItemComponent = (props: NavItemProps) => ReactElement;
 
 export default function Home() {
   const { data: session, status } = useSession();
