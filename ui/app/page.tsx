@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 // If/when you add a real component, restore this import:
 // import { UserProfile } from "./profile/UserProfile";
 
@@ -19,6 +20,14 @@ type PageId =
   | "skillstore"
   | "store";
 
+type NavItemProps = {
+  id: PageId;
+  icon: string;
+  label: string;
+  live?: boolean;
+};
+type NavItemComponent = (props: NavItemProps) => JSX.Element;
+
 export default function Home() {
   const { data: session, status } = useSession();
   const isLoading = status === "loading";
@@ -35,17 +44,7 @@ export default function Home() {
   const openSidebar = () => setSidebarOpen(true);
   const closeSidebar = () => setSidebarOpen(false);
 
-  const NavItem = ({
-    id,
-    icon,
-    label,
-    live,
-  }: {
-    id: PageId;
-    icon: string;
-    label: string;
-    live?: boolean;
-  }) => (
+  const NavItem = ({ id, icon, label, live }: NavItemProps) => (
     <div
       className={`px-5 py-3 cursor-pointer transition-all flex items-center gap-3 text-[12px] tracking-wider ${
         activePage === id
@@ -113,11 +112,15 @@ export default function Home() {
         <header className="relative z-10 bg-white py-4 px-4 sm:px-6 md:px-8 grid grid-cols-3 items-center">
           <div className="flex items-center gap-2 sm:gap-3">
             <HamburgerLeft />
-            <img
-              src="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/hjg.png"
-              alt="BARBARIKA"
-              className="h-12 sm:h-14"
-            />
+            <div className="relative h-14 w-14 sm:h-16 sm:w-16">
+              <Image
+                src="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/hjg.png"
+                alt="BARBARIKA"
+                fill
+                sizes="64px"
+                priority
+              />
+            </div>
           </div>
           <div className="justify-self-center">
             <h1
@@ -163,11 +166,15 @@ export default function Home() {
       <header className="relative z-10 bg-white py-4 px-4 sm:px-6 md:px-8 grid grid-cols-3 items-center">
         <div className="flex items-center gap-2 sm:gap-3">
           <HamburgerLeft />
-          <img
-            src="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/hjg.png"
-            alt="BARBARIKA"
-            className="h-12 sm:h-14"
-          />
+          <div className="relative h-14 w-14 sm:h-16 sm:w-16">
+            <Image
+              src="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/hjg.png"
+              alt="BARBARIKA"
+              fill
+              sizes="64px"
+              priority
+            />
+          </div>
         </div>
         <div className="justify-self-center">
           <h1
@@ -212,7 +219,7 @@ export default function Home() {
                 </div>
 
                 <h1
-                  className="text-4xl md:text-5xl font-black tracking-tight mb-3 uppercase leading-tight title-shine"
+                  className="text-4xl md:text-5xl font-black tracking-tight mb-3 uppercase leading-tight"
                   style={{ fontFamily: "Impact, Arial Black, sans-serif" }}
                 >
                   OPEN DATA FACTORY FOR ROBOTICS
@@ -233,7 +240,7 @@ export default function Home() {
                 </p>
               </section>
 
-              {/* Marquee aligned to sidebar edge (no double-border look) */}
+              {/* Marquee aligned to sidebar edge */}
               <Marquee />
 
               {/* Supported Robots (no inner image border, standardized desc) */}
@@ -481,10 +488,6 @@ export default function Home() {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        @keyframes neonPulse {
-          0%, 100% { opacity: 0.35; }
-          50% { opacity: 0.65; }
-        }
         @keyframes borderFlow {
           0% { background-position: 0% 50%; }
           100% { background-position: 200% 50%; }
@@ -496,8 +499,8 @@ export default function Home() {
 
 /* ===== Shared bits ===== */
 
-function SidebarDesktop({ NavItem }: any) {
-  // Single clean divider to match grid, no double-lines
+function SidebarDesktop({ NavItem }: { NavItem: NavItemComponent }) {
+  // Single divider (no double-lines look)
   return (
     <nav className="hidden md:flex w-60 flex-shrink-0 bg-black/95 border-r border-white/10 py-5 min-h-[calc(100vh-80px)] flex-col">
       <div className="mb-8">
@@ -545,7 +548,12 @@ function SidebarDesktop({ NavItem }: any) {
   );
 }
 
-function SidebarMobile({ NavItem, closeSidebar }: any) {
+function SidebarMobile(
+  {
+    NavItem,
+    closeSidebar,
+  }: { NavItem: NavItemComponent; closeSidebar: () => void }
+) {
   return (
     <div className="md:hidden fixed inset-0 z-[60]">
       <div
@@ -727,17 +735,17 @@ function RobotCard({
           COMING SOON
         </div>
       )}
-      {/* soft neon ring */}
-      <div
-        className="pointer-events-none absolute -inset-1 opacity-0 group-hover:opacity-100 transition duration-500 blur-2xl"
-        style={{
-          background:
-            "radial-gradient(800px 200px at 50% -20%, rgba(164,244,49,0.12), transparent 60%)",
-        }}
-      />
       {/* image container WITHOUT inner border now */}
       <div className="w-36 h-36 mx-auto mb-5 bg-[#151515] rounded flex items-center justify-center overflow-hidden">
-        <img src={imgSrc} alt={name} className="w-full h-full object-contain" />
+        <div className="relative w-full h-full">
+          <Image
+            src={imgSrc}
+            alt={name}
+            fill
+            sizes="144px"
+            style={{ objectFit: "contain" }}
+          />
+        </div>
       </div>
       <div className="text-[15px] tracking-widest mb-1.5 font-bold">{name}</div>
       <p className="text-[12px] text-gray-400 leading-relaxed">{desc}</p>
@@ -808,7 +816,7 @@ const videoFiles = [
   "eg0_3.mp4",
   "ego_2.mp4",
   "robot3.mp4",
-  "robot42.mp4",
+  "robot41.mp4",
 ];
 
 function VideoCard({ file, mobile = false }: { file: string; mobile?: boolean }) {
@@ -911,7 +919,7 @@ function Marquee() {
 function BackgroundFX() {
   return (
     <>
-      {/* grid opacity bumped (25% less transparent) */}
+      {/* grid opacity bumped (25% less transparent vs earlier) */}
       <div
         className="fixed inset-0 pointer-events-none opacity-[0.075]"
         style={{
@@ -997,7 +1005,7 @@ function UserProfile() {
   );
 }
 
-/* ===== Store Cards ===== */
+/* ===== Store Cards (using next/image) ===== */
 
 function StorePreorderCard({
   imgSrc,
@@ -1019,11 +1027,19 @@ function StorePreorderCard({
         PRE-ORDER
       </div>
       <div className="w-36 h-36 mx-auto mb-5 bg-[#151515] flex items-center justify-center rounded overflow-hidden">
-        <img src={imgSrc} alt={title} className="w-full h-full object-contain" />
+        <div className="relative w-full h-full">
+          <Image
+            src={imgSrc}
+            alt={title}
+            fill
+            sizes="144px"
+            style={{ objectFit: "contain" }}
+          />
+        </div>
       </div>
       <div className="text-lg tracking-widest mb-2 font-bold">{title}</div>
       <p className="text-[12px] text-gray-400 leading-relaxed">{desc}</p>
-      <div className="mt-4 text-xs text-[#a4f431] font-bold break-words">
+      <div className="mt-4 text-xs text-[#a4f0f31] font-bold break-words">
         {contact}
       </div>
     </div>
@@ -1045,7 +1061,15 @@ function StoreSoonImageCard({
         AVAILABLE SOON
       </div>
       <div className="w-36 h-36 mx-auto mb-5 bg-[#151515] flex items-center justify-center rounded overflow-hidden">
-        <img src={imgSrc} alt={title} className="w-full h-full object-contain" />
+        <div className="relative w-full h-full">
+          <Image
+            src={imgSrc}
+            alt={title}
+            fill
+            sizes="144px"
+            style={{ objectFit: "contain" }}
+          />
+        </div>
       </div>
       <div className="text-lg tracking-widest mb-2 font-bold">{title}</div>
       <p className="text-[12px] text-gray-400 leading-relaxed">{desc}</p>
@@ -1054,7 +1078,7 @@ function StoreSoonImageCard({
   );
 }
 
-/* ===== Skill Store content (unchanged technical detail) ===== */
+/* ===== Skill Store content ===== */
 function SkillStoreContent() {
   return (
     <div>
