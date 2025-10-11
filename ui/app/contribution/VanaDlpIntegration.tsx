@@ -66,10 +66,9 @@ export function VanaDlpIntegration() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Contribute to Data Liquidity Pools</CardTitle>
+        <CardTitle>Contribute to Barbarika Data Liquidity Pools</CardTitle>
         <CardDescription>
-          Share your Google account data to earn rewards from VANA Data
-          Liquidity Pools
+          Share your Physical AI Data  by connecting your drive 
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -133,7 +132,7 @@ export function VanaDlpIntegration() {
               ) : (
                 <>
                   <Upload className="mr-2 h-4 w-4" />
-                  Contribute Google Data
+                  Contribute Data
                 </>
               )}
             </Button>

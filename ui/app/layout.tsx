@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Google Drive Connector",
-  description: "Connect your Google account and view your information",
+  title: "Let's Solve Physical AI Together",
+  description: "Earn by contributing your data",
 };
 
 export default async function RootLayout({
