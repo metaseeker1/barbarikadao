@@ -460,7 +460,10 @@ export default function Home() {
                 • Pointer registered with <span className="font-semibold">VANA</span>
               </li>
               <li className="py-3 leading-relaxed text-green-300">
-                • Sign in only if your account is verified <span className="font-semibold">OR</span> Send your datasets to "praveen@barbarika.foundation" to get verified
+                • Sign in only if your account is verified 
+              </li>
+              <li className="py-3 leading-relaxed text-green-300">
+                • Send your datasets to {"\"praveen@barbarika.foundation\""} to get verified
               </li>
             </ul>
 
