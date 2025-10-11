@@ -5,7 +5,8 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import type { ReactElement } from "react";
 // If/when you add a real component, restore this import:
-// import { UserProfile } from "./profile/UserProfile";
+import { UserProfile } from "./profile/UserProfile";
+
 
 type PageId =
   | "home"
@@ -164,7 +165,7 @@ export default function Home() {
     <div className="min-h-screen bg-black text-white font-mono flex flex-col relative overflow-hidden">
       <BackgroundFX />
 
-      <header className="relative z-10 bg-white py-4 px-4 sm:px-6 md:px-8 grid grid-cols-3 items-center">
+      <header className="relative z-10 bg-white py-0.25 px-4 sm:px-6 md:px-8 grid grid-cols-3 items-center">
         <div className="flex items-center gap-2 sm:gap-3">
           <HamburgerLeft />
           <div className="relative h-14 w-14 sm:h-16 sm:w-16">
@@ -172,7 +173,7 @@ export default function Home() {
               src="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/hjg.png"
               alt="BARBARIKA"
               fill
-              sizes="64px"
+              sizes="256px"
               priority
             />
           </div>
@@ -220,13 +221,13 @@ export default function Home() {
                 </div>
 
                 <h1
-                  className="text-4xl md:text-5xl font-black tracking-tight mb-3 uppercase leading-tight"
+                  className="text-3xl md:text-4xl font-black tracking-[0.07em] mb-2 uppercase leading-tight"
                   style={{ fontFamily: "Impact, Arial Black, sans-serif" }}
                 >
                   OPEN DATA FACTORY FOR ROBOTICS
                 </h1>
                 <p className="text-sm md:text-base text-white/80 tracking-[0.25em] mb-8">
-                  Let’s solve data scarcity in robotics — together
+                  Let’s solve Physical AI — together
                 </p>
 
                 <button
@@ -237,7 +238,7 @@ export default function Home() {
                   <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/50 to-transparent group-hover:translate-x-full transition-transform duration-700" />
                 </button>
                 <p className="text-xs md:text-sm text-[#a4f431] tracking-wide mt-4">
-                  Earn BRBK by contributing your data
+                  Earn by contributing your data
                 </p>
               </section>
 
@@ -330,7 +331,7 @@ export default function Home() {
               <ul className="mt-6 space-y-3 text-sm text-gray-300">
                 <li>• Connect Google account</li>
                 <li>• Client-side encryption</li>
-                <li>• Earn BRBK tokens</li>
+                <li>• Earn tokens</li>
                 <li>• IPFS permanent storage</li>
               </ul>
               <button
@@ -458,12 +459,8 @@ export default function Home() {
               <li className="py-3 leading-relaxed text-gray-300 border-b border-white/10">
                 • Pointer registered with <span className="font-semibold">VANA</span>
               </li>
-              <li className="py-3 leading-relaxed text-gray-300 border-b border-white/10">
-                • Send your datasets for primary checks to{" "}
-                <span className="font-semibold">praveen@barbarika.foundation</span>
-              </li>
-              <li className="py-3 leading-relaxed text-gray-300">
-                • Once verified, we’ll add your email to our <span className="font-semibold">Beta Users</span> list and unlock early-access uploads
+              <li className="py-3 leading-relaxed text-green-300">
+                • Sign in only if your account is verified <span className="font-semibold">OR</span> Send your datasets to "praveen@barbarika.foundation" to get verified
               </li>
             </ul>
 
@@ -503,7 +500,7 @@ export default function Home() {
 function SidebarDesktop({ NavItem }: { NavItem: NavItemComponent }) {
   // Single divider (no double-lines look)
   return (
-    <nav className="hidden md:flex w-60 flex-shrink-0 bg-black/95 border-r border-white/10 py-5 min-h-[calc(100vh-80px)] flex-col">
+    <nav className="hidden md:flex w-60 flex-shrink-0 bg-black/95 border-r border-[#a4f431]/200 py-5 min-h-[calc(100vh-80px)] flex-col">
       <div className="mb-8">
         <div className="px-5 py-2 text-[10px] text-white/90 tracking-[0.2em] font-bold mb-1">
           NAVIGATION
@@ -563,7 +560,7 @@ function SidebarMobile(
         aria-hidden
       />
       <aside
-        className="absolute left-0 top-0 bottom-0 w-72 max-w-[85%] bg-black/95 border-r border-white/10 p-5 overflow-y-auto"
+        className="absolute left-0 top-0 bottom-0 w-72 max-w-[85%] bg-black/95 border-r border-[#a4f431]/200  p-5 overflow-y-auto"
         role="dialog"
         aria-label="Mobile navigation"
       >
@@ -695,12 +692,12 @@ function StoreSection() {
           desc="Open-source manipulator"
         />
         <StoreSoonImageCard
-          imgSrc="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/realsense-placeholder.png"
+          imgSrc="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/D405.avif"
           title="REALSENSE CAMERA"
           desc="Depth camera for 3D perception"
         />
         <StoreSoonImageCard
-          imgSrc="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/full-setup-placeholder.png"
+          imgSrc="https://raw.githubusercontent.com/metaseeker1/barbarika_site/main/Barbarika_logo-removebg-preview.png"
           title="FULL SETUP"
           desc="Complete teleoperation system"
         />
@@ -817,7 +814,7 @@ const videoFiles = [
   "eg0_3.mp4",
   "ego_2.mp4",
   "robot3.mp4",
-  "robot41.mp4",
+  "robot42.mp4",
 ];
 
 function VideoCard({ file, mobile = false }: { file: string; mobile?: boolean }) {
@@ -896,19 +893,21 @@ function Marquee() {
     <div className="-mx-8 md:-mx-16 my-10 border-y border-white/10 bg-black overflow-hidden">
       <div className="whitespace-nowrap">
         <div
-          className="py-3 text-xs tracking-[0.5em] text-white/70"
+          className="py-5 text-lg tracking-[0.5em] text-white/90"
           style={{ animation: "marquee 28s linear infinite" }}
         >
-          <span className="mx-8">BRBK</span>
           <span className="mx-8">CONNECT</span>
           <span className="mx-8">TELEOPERATE</span>
           <span className="mx-8">CONTRIBUTE</span>
           <span className="mx-8">TRAIN</span>
-          <span className="mx-8">ROBOT SKILLS</span>
-          <span className="mx-8">DATA DROPS</span>
-          <span className="mx-8">BARBARIKA</span>
-          <span className="mx-8">DATADAO</span>
-          <span className="mx-8">OPEN DATA FACTORY</span>
+          <span className="mx-8">CONNECT</span>
+          <span className="mx-8">TELEOPERATE</span>
+          <span className="mx-8">CONTRIBUTE</span>
+          <span className="mx-8">TRAIN</span>
+          <span className="mx-8">CONNECT</span>
+          <span className="mx-8">TELEOPERATE</span>
+          <span className="mx-8">CONTRIBUTE</span>
+          <span className="mx-8">TRAIN</span>
         </div>
       </div>
     </div>
@@ -945,8 +944,8 @@ function BackgroundFX() {
 
 function WhiteFooter() {
   return (
-    <footer className="bg-white text-black">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+    <footer className="bg-[#a4f431] text-black">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         <div className="flex flex-col items-center gap-2 text-center">
           <div className="flex items-center gap-3">
             <a
@@ -984,27 +983,27 @@ function WhiteFooter() {
  * Fallback UserProfile component
  * Replace with real component once you add profile/UserProfile.tsx
  */
-function UserProfile() {
-  return (
-    <div className="border border-white/10 bg-[#0f0f0f] p-6 rounded">
-      <h2 className="text-xl font-bold tracking-wider mb-2">User Profile</h2>
-      <p className="text-sm text-white/70">
-        Placeholder component: <code>./profile/UserProfile</code> not found.
-      </p>
-      <ul className="list-disc list-inside text-xs text-white/60 mt-3">
-        <li>
-          Create <code>app/profile/UserProfile.tsx</code> (or{" "}
-          <code>components/profile/UserProfile.tsx</code>).
-        </li>
-        <li>
-          Export it as <code>export function UserProfile() &#123;...&#125;</code> or{" "}
-          <code>export default</code>.
-        </li>
-        <li>Restore the import at the top of this file.</li>
-      </ul>
-    </div>
-  );
-}
+// function UserProfile() {
+//   return (
+//     <div className="border border-white/10 bg-[#0f0f0f] p-6 rounded">
+//       <h2 className="text-xl font-bold tracking-wider mb-2">User Profile</h2>
+//       <p className="text-sm text-white/70">
+//         Placeholder component: <code>./profile/UserProfile</code> not found.
+//       </p>
+//       <ul className="list-disc list-inside text-xs text-white/60 mt-3">
+//         <li>
+//           Create <code>app/profile/UserProfile.tsx</code> (or{" "}
+//           <code>components/profile/UserProfile.tsx</code>).
+//         </li>
+//         <li>
+//           Export it as <code>export function UserProfile() &#123;...&#125;</code> or{" "}
+//           <code>export default</code>.
+//         </li>
+//         <li>Restore the import at the top of this file.</li>
+//       </ul>
+//     </div>
+//   );
+// }
 
 /* ===== Store Cards (using next/image) ===== */
 
